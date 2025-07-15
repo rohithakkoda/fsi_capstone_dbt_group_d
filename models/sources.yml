@@ -1,0 +1,11 @@
+version: 2
+
+sources:
+  - name: raw
+    database: DEBBIE_DB
+    schema: FSI_COALESCE_CAPSTONE_ROHIT_RAJ
+    tables:
+      - name: RAW_CRYPTO
+      - name: RAW_ETFS
+      - name: RAW_FOREX
+      - name: RAW_STOCKS

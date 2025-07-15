@@ -1,0 +1,14 @@
+fsi_capstone_dbt:
+  target: dev
+  outputs:
+    dev:
+      type: snowflake
+      account: "XQEFMFM-HAKKODAINC_PARTNER"
+      user: "ROHIT_GUPTA@HAKKODA.IO"
+      authenticator : "externalbrowser"
+      role: "PUBLIC"
+      database: DEBBIE_DB
+      warehouse: COMPUTE_WH
+      schema: FSI_COALESCE_CAPSTONE_ROHIT_RAJ
+      threads: 4
+      client_session_keep_alive: False
