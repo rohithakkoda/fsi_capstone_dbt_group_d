@@ -12,7 +12,7 @@ with source_data as (
         metadata_file_row_number,
         _ingested_at
     from {{ source('raw', 'RAW_CRYPTO') }}
-    where metadata_filename like '%ADA_USD%'  -- Filter for ADA/USD data only
+      -- Filter for ADA/USD data only
 ),
 
 extracted as (

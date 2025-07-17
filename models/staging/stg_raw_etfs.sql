@@ -12,7 +12,7 @@ with source_data as (
         metadata_file_row_number,
         _ingested_at
     from {{ source('raw', 'RAW_ETFS') }}
-    where metadata_filename like '%AGG%'  -- Filter for AGG ETF data
+      -- Filter for AGG ETF data
 ),
 
 extracted as (

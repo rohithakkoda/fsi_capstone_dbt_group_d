@@ -1,0 +1,218 @@
+version: 2
+models:
+  - name: stg_raw_crypto
+    description: "Staging model for raw cryptocurrency data extracted from JSON input."
+    columns:
+      - name: status
+        description: "Status of the API response, e.g., 'ok'."
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['ok']
+      - name: currency_base
+        description: "Base currency in the crypto pair (e.g., ADA in ADA/USD)."
+        tests:
+          - not_null
+      - name: currency_quote
+        description: "Quote currency in the crypto pair (e.g., USD in ADA/USD)."
+        tests:
+          - not_null
+      - name: exchange
+        description: "Exchange from which the crypto data was sourced."
+      - name: interval
+        description: "Time interval of the price data (e.g., 1d, 1h)."
+      - name: symbol
+        description: "Symbol representing the currency pair (e.g., ADA/USD)."
+        tests:
+          - not_null
+      - name: type
+        description: "Type of financial instrument (typically 'crypto' for this model)."
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['crypto']
+      - name: close_price
+        description: "Closing price for the time interval."
+      - name: price_date
+        description: "Date of the price data point."
+        tests:
+          - not_null
+      - name: high_price
+        description: "Highest price during the interval."
+      - name: low_price
+        description: "Lowest price during the interval."
+      - name: open_price
+        description: "Opening price for the interval."
+      - name: metadata_filename
+        description: "Filename from which the row was ingested."
+      - name: metadata_file_row_number
+        description: "Row number in the source file."
+      - name: _ingested_at
+        description: "Timestamp when the data was ingested into the raw layer."
+      - name: crypto_price_key
+        description: "Surrogate key generated from symbol and price_date."
+        tests:
+          - not_null
+          - unique
+  - name: stg_raw_etfs
+    description: "Staging model for raw ETF data extracted from JSON files related to AGG ETF."
+    columns:
+      - name: currency
+        description: "Currency in which the ETF is traded."
+        tests:
+          - not_null
+      - name: exchange
+        description: "Exchange where the ETF is listed."
+      - name: exchange_timezone
+        description: "Timezone of the exchange."
+      - name: interval
+        description: "Time interval of the data (e.g., 1d, 1h)."
+      - name: mic_code
+        description: "Market Identifier Code for the exchange."
+      - name: symbol
+        description: "Symbol representing the ETF (e.g., AGG)."
+        tests:
+          - not_null
+      - name: instrument_type
+        description: "Type of the instrument (e.g., 'etf')."
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['etf']
+      - name: status
+        description: "Status of the API response, expected to be 'ok'."
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['ok']
+      - name: close_price
+        description: "Closing price of the ETF on the given trading date."
+      - name: trading_date
+        description: "Date of the ETF price data."
+        tests:
+          - not_null
+      - name: high_price
+        description: "Highest price of the ETF on the trading date."
+      - name: low_price
+        description: "Lowest price of the ETF on the trading date."
+      - name: open_price
+        description: "Opening price of the ETF on the trading date."
+      - name: volume
+        description: "Trading volume of the ETF on the trading date."
+      - name: metadata_filename
+        description: "Name of the source file from which data was ingested."
+      - name: metadata_file_row_number
+        description: "Row number in the ingested file."
+      - name: _ingested_at
+        description: "Timestamp when the data was ingested."
+      - name: etf_price_key
+        description: "Surrogate key generated using symbol and trading_date."
+        tests:
+          - not_null
+          - unique
+      - name: dbt_updated_at
+        description: "Timestamp when the model was last updated by DBT."
+  - name: stg_raw_forex
+    description: "Staging model for raw foreign exchange (forex) data for AUD/USD currency pair."
+    columns:
+      - name: base_currency
+        description: "Base currency in the forex pair (e.g., AUD in AUD/USD)."
+        tests:
+          - not_null
+      - name: quote_currency
+        description: "Quote currency in the forex pair (e.g., USD in AUD/USD)."
+        tests:
+          - not_null
+      - name: interval
+        description: "Time interval of the forex data (e.g., 1d, 1h)."
+      - name: symbol
+        description: "Symbol representing the forex pair (e.g., AUD/USD)."
+        tests:
+          - not_null
+      - name: instrument_type
+        description: "Type of the instrument (should be 'forex' for this model)."
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['forex']
+      - name: status
+        description: "Status of the API response (e.g., 'ok')."
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['ok']
+      - name: close_rate
+        description: "Closing exchange rate for the trading date."
+      - name: trading_date
+        description: "Date of the forex rate data."
+        tests:
+          - not_null
+      - name: high_rate
+        description: "Highest exchange rate during the trading interval."
+      - name: low_rate
+        description: "Lowest exchange rate during the trading interval."
+      - name: open_rate
+        description: "Opening exchange rate for the trading interval."
+      - name: daily_spread
+        description: "Difference between the highest and lowest rate during the trading day."
+      - name: daily_change_pct
+        description: "Percentage change from open to close rate during the day."
+      - name: metadata_filename
+        description: "Name of the source file from which data was ingested."
+      - name: metadata_file_row_number
+        description: "Row number in the ingested file."
+      - name: _ingested_at
+        description: "Timestamp when the data was ingested."
+      - name: forex_rate_key
+        description: "Surrogate key generated using symbol and trading_date."
+        tests:
+          - not_null
+          - unique
+      - name: dbt_updated_at
+        description: "Timestamp when the model was last updated by DBT."
+  - name: stg_raw_stocks
+    description: "Staging model for raw stock market data, parsed from nested JSON structure."
+    columns:
+      - name: symbol
+        description: "Stock ticker symbol (e.g., AAPL, TSLA)."
+        tests:
+          - not_null
+      - name: exchange
+        description: "Stock exchange where the symbol is listed (e.g., NASDAQ, NYSE)."
+      - name: exchange_timezone
+        description: "Timezone of the stock exchange."
+      - name: interval
+        description: "Time interval of the price data (e.g., 1d, 1h)."
+      - name: mic_code
+        description: "Market Identifier Code for the exchange."
+      - name: currency
+        description: "Trading currency for the stock (e.g., USD, EUR)."
+        tests:
+          - not_null
+      - name: asset_type
+        description: "Type of the asset (e.g., 'stock')."
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['stock']
+      - name: date_transaction
+        description: "Date and time of the transaction or price point."
+        tests:
+          - not_null
+      - name: open_price
+        description: "Opening price of the stock for the given time interval."
+      - name: high_price
+        description: "Highest price of the stock for the given time interval."
+      - name: low_price
+        description: "Lowest price of the stock for the given time interval."
+      - name: close_price
+        description: "Closing price of the stock for the given time interval."
+      - name: volume
+        description: "Number of shares traded during the time interval."
+      - name: metadata_filename
+        description: "Name of the file from which this record was ingested."
+      - name: metadata_file_row_number
+        description: "Row number in the source file."
+      - name: _ingested_at
+        description: "Timestamp when the data was ingested into the raw layer."
+        

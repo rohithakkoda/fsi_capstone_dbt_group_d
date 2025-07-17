@@ -12,7 +12,7 @@ with source_data as (
         metadata_file_row_number,
         _ingested_at
     from {{ source('raw', 'RAW_FOREX') }}
-    where metadata_filename like '%AUD_USD%'  -- Filter for AUD/USD data
+      -- Filter for AUD/USD data
 ),
 
 extracted as (
